@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Observer\LiquidaJp;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,21 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
+
+        $liquida = new LiquidaJp();
+        $liquida->teste();
+        $notificacoes = $liquida->getNotificacoes();
+        $mensagens = [];
+
+        while (!$notificacoes->isEmpty()) {
+            $notificacoesItem = $notificacoes->pop();
+            while (!$notificacoesItem->isEmpty()) {
+                $mensagens[] = $notificacoesItem->pop();
+            }
+        }
+
         return $this->render('default/index.html.twig', array(
+            'mensagens' => $mensagens,
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
         ));
     }
